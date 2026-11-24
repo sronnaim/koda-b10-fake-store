@@ -1,27 +1,26 @@
-import { useContext } from "react"
-import { productsContext } from "../contexts/products/productsContext"
-import { cartContext } from "../contexts/cart/cartContext";
+import { useDispatch, useSelector } from "react-redux";
+import { decrQty, incrQty } from "../redux/slices/cart.slice";
+import { useEffect } from "react";
+import { productActions } from "../redux/slices/products.slice";
 
 function Pos() {
-  const products = useContext(productsContext);
-  const [cart, dispatchCart] = useContext(cartContext);
+  const { products } = useSelector(state => state.products)
+  const cart = useSelector(state => state.cart)
+  const rdxDispatch = useDispatch()
 
   function handleIncrQty(p) {
-    dispatchCart({
-      action: 'incr_qty',
-      payload: p
-    })
+    rdxDispatch(incrQty(p))
   }
 
   function handleDecrQty(p) {
-    dispatchCart({
-      action: 'decr_qty',
-      payload: p
-    })
+    rdxDispatch(decrQty(p))
   }
 
-  if (!products)
-    return <main>LOADING...</main>
+  useEffect(() => {
+    (async () => {
+      rdxDispatch(productActions.seedProductsThunk())
+    })()
+  }, [rdxDispatch])
 
   return (
     <main className="container mx-auto p-4">

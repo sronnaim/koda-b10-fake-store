@@ -1,7 +1,8 @@
 import { createBrowserRouter, RouterProvider } from "react-router"
 import Pos from "./pages/Pos"
-import ProductsProvider from "./contexts/products/ProductsProvider"
-import CartProvider from "./contexts/cart/CartProvider"
+import { Provider as ReduxProvider } from "react-redux"
+import { persistor, store } from "./redux/store"
+import { PersistGate } from "redux-persist/integration/react"
 
 const router = createBrowserRouter([{
   path: '/',
@@ -10,11 +11,11 @@ const router = createBrowserRouter([{
 
 function App() {
   return (
-    <ProductsProvider>
-      <CartProvider>
+    <ReduxProvider store={store}>
+      <PersistGate loading={null} persistor={persistor}>
         <RouterProvider router={router} />
-      </CartProvider>
-    </ProductsProvider>
+      </PersistGate>
+    </ReduxProvider>
   )
 }
 
